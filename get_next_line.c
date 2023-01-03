@@ -6,7 +6,7 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 14:18:37 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/03 17:54:10 by iseldas-         ###   ########.fr       */
+/*   Updated: 2023/01/03 19:32:49 by iseldas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,21 +30,21 @@ char	*get_next_line(int fd)
 char	*ft_initialiser(char *line_remaining, int fd)
 {
 	char	*temp;
+	int		ini;
 
 	temp = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!temp)
 		return (0);
-	read(fd, temp, BUFFER_SIZE);
-	if (!temp)
+	temp = NULL;
+	ini = 1;
+	while (ini > 0 && ft_strchr_gnl(temp, '\n') != 1 && ft_strchr_gnl(temp, '\0') != 1)
 	{
-		free(temp);
-		return (0);
-	}
-	while (ft_strchr_gnl(temp, '\n') != 1 || ft_strchr_gnl(temp, '\0') != 1)
-	{
+		ini = read(fd, temp, BUFFER_SIZE);
+		printf("%s", temp);
 		line_remaining = ft_strjoin(line_remaining, temp);
-		read(fd, temp, BUFFER_SIZE);
+		printf("%s", line_remaining);
 	}
+	free(temp);
 	return (line_remaining);
 }
 
