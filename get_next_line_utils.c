@@ -6,7 +6,7 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:24:09 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/03 16:01:12 by iseldas-         ###   ########.fr       */
+/*   Updated: 2023/01/03 17:45:09 by iseldas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,15 @@ int	ft_strlen(const char *str)
 int	ft_strchr_gnl(const char *s, int c)
 {
 	int		i;
+	int		len;
 
+	len = ft_strlen(s);
 	i = 0;
-	while (s[i])
+	while (i < len)
 	{
 		if (s[i] == (char)c)
 			return (1);
 		i++;
 	}
-	return (-1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:41:07 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/03 15:55:36 by iseldas-         ###   ########.fr       */
+/*   Updated: 2023/01/03 17:56:04 by iseldas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ void	ft_bzero(void *s, size_t n);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strlen(const char *str);
 int		ft_strchr_gnl(const char *s, int c);
+char	*ft_strdup(const char *s);
 
 #endif
