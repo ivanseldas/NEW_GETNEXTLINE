@@ -6,36 +6,11 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:24:09 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/03 19:31:53 by iseldas-         ###   ########.fr       */
+/*   Updated: 2023/01/04 23:38:05 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*ptr;
-
-	if (size > 0 && (SIZE_MAX / size) < count)
-		return (0);
-	ptr = (void *)malloc(count * size);
-	if (!ptr)
-		return (0);
-	ft_bzero(ptr, count * size);
-	return (ptr);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (n > i)
-	{
-		((unsigned char *)s)[i] = 0;
-		i++;
-	}
-}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -76,18 +51,55 @@ int	ft_strlen(const char *str)
 	return (i);
 }
 
-int	ft_strchr_gnl(const char *s, int c)
+/*char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	int		i;
-	int		len;
+	size_t	s_len;
+	size_t	size;
+	char	*sub;
+
+	if (!s)
+		return (NULL);
+	s_len = ft_strlen(s);
+	if (start > s_len)
+		return (ft_strdup(""));
+	if (start + len > s_len)
+		len = s_len - start;
+	size = len + 1;
+	sub = (char *)malloc(size * sizeof(char));
+	if (!sub)
+		return (NULL);
+	ft_memcpy(sub, s + start, len);
+	sub[len] = '\0';
+	return (sub);
+}*/
+
+char	*ft_strdup(const char *s)
+{
+	char	*str;
+	size_t	len;
+	size_t	i;
 
 	len = ft_strlen(s);
+	str = (char *)malloc((len + 1) * sizeof(*s));
+	if (!str)
+		return (NULL);
 	i = 0;
-	while (i < len)
+	while (s[i] != '\0')
 	{
-		if (s[i] == (char)c)
-			return (1);
+		str[i] = s[i];
 		i++;
 	}
-	return (0);
+	str[i] = '\0';
+	return (str);
+}
+
+char	*ft_store_blocks(char *str_block, char *buffer)
+{
+	if (!buffer)
+		return (0);
+	if (!str_block)
+		str_block = ft_strdup("");
+	str_block = ft_strjoin(str_block, buffer);
+//	printf("STORED BLOCK: %s\n", str_block);
+	return (str_block);
 }

@@ -6,7 +6,7 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:41:07 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/03 17:56:04 by iseldas-         ###   ########.fr       */
+/*   Updated: 2023/01/04 23:18:31 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,13 @@
 # include <stdio.h>
 
 char	*get_next_line(int fd);
-char	*ft_initialiser(char *line_remaining, int fd);
-char	*ft_detector(char *line_remaining);
-char	*ft_remove_line(char *line_remaining, char *line_return);
-void	*ft_calloc(size_t count, size_t size);
-void	ft_bzero(void *s, size_t n);
+int		ft_detector(char *str_block);
+char	*ft_init(char *buffer, char *str_block, int fd);
+char	*ft_get_line(char *str_block);
+char	*ft_store_blocks(char *str_block, char *buffer);
+char	*ft_clean_this_up(char *str_block, char *str_line);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strlen(const char *str);
-int		ft_strchr_gnl(const char *s, int c);
 char	*ft_strdup(const char *s);
 
 #endif

@@ -3,118 +3,114 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ivanisp <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/03 14:18:37 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/03 19:32:49 by iseldas-         ###   ########.fr       */
+/*   Created: 2023/01/04 19:25:59 by ivanisp           #+#    #+#             */
+/*   Updated: 2023/01/04 23:37:53 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 char	*get_next_line(int fd)
 {
-	static char	*line_remaining;
-	char		*line_return;
+	static char	*str_block;
+	char		*str_line;
+	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (0);
-	if (!line_remaining)
-		line_remaining = ft_strdup("");
-	line_remaining = ft_initialiser(line_remaining, fd);
-	line_return = ft_detector(line_remaining);
-	line_remaining = ft_remove_line(line_remaining, line_return);
-	return (line_return);
-}
-
-char	*ft_initialiser(char *line_remaining, int fd)
-{
-	char	*temp;
-	int		ini;
-
-	temp = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!temp)
-		return (0);
-	temp = NULL;
-	ini = 1;
-	while (ini > 0 && ft_strchr_gnl(temp, '\n') != 1 && ft_strchr_gnl(temp, '\0') != 1)
-	{
-		ini = read(fd, temp, BUFFER_SIZE);
-		printf("%s", temp);
-		line_remaining = ft_strjoin(line_remaining, temp);
-		printf("%s", line_remaining);
-	}
-	free(temp);
-	return (line_remaining);
-}
-
-char	*ft_detector(char *line_remaining)
-{
-	int		i;
-	char	*sentence;
-
-	i = 0;
-	while (line_remaining[i] != '\0' || line_remaining[i] != '\n')
-		i++;
-	if (line_remaining[ft_strlen(line_remaining)] == '\0')
-		sentence = malloc(sizeof(char) * (i + 1));
-	if (line_remaining[ft_strlen(line_remaining)] == '\n')
-		sentence = malloc(sizeof(char) * (i + 2));
-	if (!sentence)
-	{
-		free(line_remaining);
-		return (0);
-	}
-	i = 0;
-	while ((line_remaining[i] != '\n' || line_remaining[i] != '\0'))
-	{
-		sentence[i] = line_remaining[i];
-		i++;
-	}
-	if (line_remaining[i++] == '\n')
-		sentence[i] = line_remaining[i];
-	sentence[i] = '\0';
-	return (sentence);
-}
-
-char	*ft_remove_line(char *line_remaining, char *line_return)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = ft_strlen(line_return);
-	temp = ft_calloc(ft_strlen(line_remaining) - i + 1, sizeof(char));
-	if (!temp)
-	{
-		free(line_remaining);
-		free(line_return);
-		return (0);
-	}
-	j = 0;
-	while (i < ft_strlen(line_remaining))
-		temp[j] = line_remaining[j];
-	temp[j] = '\0';
-	free(line_remaining);
-	return (temp);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*str;
-	size_t	len;
-	size_t	i;
-
-	len = ft_strlen(s);
-	str = (char *)malloc((len + 1) * sizeof(*s));
-	if (!str)
+	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
 		return (NULL);
+	str_block = ft_init(buffer, str_block, fd);
+//	printf("STORE_BLOCK 2: %s\n", str_block);
+	str_line = ft_get_line(str_block);
+//	printf("STR_LINE: %s\n", str_line);
+	str_block = ft_clean_this_up(str_block, str_line);
+//	printf("REST: %s\n", str_block);
+	return (str_line);
+}
+
+int	ft_detector(char *str_block)
+{
+	int	i;
+
 	i = 0;
-	while (s[i] != '\0')
+	while (str_block[i] != '\n' && i < ft_strlen(str_block))
+		i++;
+	if (i < ft_strlen(str_block))
+		return (i);
+	return (0);
+}
+
+char	*ft_init(char *buffer, char *str_block, int fd)
+{
+	int	init;
+
+	init = BUFFER_SIZE;
+	while (init > 0)
 	{
-		str[i] = s[i];
+		init = read(fd, buffer, BUFFER_SIZE);
+		if (init == -1)
+		{
+			free(buffer);
+			return (0);
+		}
+		buffer[init] = '\0';
+//		printf("BUFFER: %s\n", buffer);
+		str_block = ft_store_blocks(str_block, buffer);
+		if (ft_detector(str_block) > 0)
+			break ;
+	}
+	free(buffer);
+	return (str_block);
+}
+
+char	*ft_get_line(char *str_block)
+{
+	int		i;
+	int		len;
+	char	*str_line;
+
+	len = ft_detector(str_block);
+	str_line = malloc(sizeof(char) * (len + 1));
+	if (!str_line)
+	{
+		free(str_block);
+		return (0);
+	}
+	i = 0;
+	while (i < len)
+	{
+		str_line[i] = str_block[i];
 		i++;
 	}
-	str[i] = '\0';
-	return (str);
+	str_line[i] = '\0';
+	return (str_line);
+}
+
+char	*ft_clean_this_up(char *str_block, char *str_line)
+{
+	char	*temp;
+	int		len_line;
+	int		len_block;
+	int		i;
+
+	len_line = ft_strlen(str_line);
+	len_block = ft_strlen(str_block);
+	temp = malloc(sizeof(char) * (len_block - len_line));
+	if (!temp)
+	{
+		free(str_line);
+		free(str_block);
+		return (NULL);
+	}
+	i = 0;
+	while (len_block > len_line)
+		temp[i++] = str_block[++len_line];
+	temp[len_line] = '\0';
+	free(str_block);
+	return (temp);
 }
