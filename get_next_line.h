@@ -6,7 +6,7 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:41:07 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/04 23:18:31 by ivanisp          ###   ########.fr       */
+/*   Updated: 2023/01/05 00:50:59 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,6 @@ char	*ft_clean_this_up(char *str_block, char *str_line);
 char	*ft_strjoin(char const *s1, char const *s2);
 int		ft_strlen(const char *str);
 char	*ft_strdup(const char *s);
+char	*ft_joinfree(char *str_block, char *buffer);
 
 #endif

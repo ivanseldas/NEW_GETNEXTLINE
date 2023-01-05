@@ -6,11 +6,20 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:24:09 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/04 23:38:05 by ivanisp          ###   ########.fr       */
+/*   Updated: 2023/01/05 00:50:46 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_joinfree(char *str_block, char *buffer)
+{
+	char	*temp;
+
+	temp = ft_strjoin(str_block, buffer);
+	free(str_block);
+	return (temp);
+}
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -99,7 +108,7 @@ char	*ft_store_blocks(char *str_block, char *buffer)
 		return (0);
 	if (!str_block)
 		str_block = ft_strdup("");
-	str_block = ft_strjoin(str_block, buffer);
+	str_block = ft_joinfree(str_block, buffer);
 //	printf("STORED BLOCK: %s\n", str_block);
 	return (str_block);
 }

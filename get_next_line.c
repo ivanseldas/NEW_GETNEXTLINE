@@ -6,7 +6,7 @@
 /*   By: ivanisp <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/04 19:25:59 by ivanisp           #+#    #+#             */
-/*   Updated: 2023/01/04 23:37:53 by ivanisp          ###   ########.fr       */
+/*   Updated: 2023/01/05 01:16:51 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ char	*get_next_line(int fd)
 	char		*str_line;
 	char		*buffer;
 
-	if (BUFFER_SIZE <= 0 || fd < 0)
+	if (BUFFER_SIZE <= 0 || fd < 0 || read(fd, 0, 0) < 0)
 		return (0);
-	buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
 	str_block = ft_init(buffer, str_block, fd);
@@ -29,7 +29,7 @@ char	*get_next_line(int fd)
 	str_line = ft_get_line(str_block);
 //	printf("STR_LINE: %s\n", str_line);
 	str_block = ft_clean_this_up(str_block, str_line);
-//	printf("REST: %s\n", str_block);
+//	printf("REST CLEANT: %s\n", str_block);
 	return (str_line);
 }
 
@@ -38,10 +38,12 @@ int	ft_detector(char *str_block)
 	int	i;
 
 	i = 0;
-	while (str_block[i] != '\n' && i < ft_strlen(str_block))
+	while (str_block[i] != '\n' && str_block[i] != '\0' && \
+			i < ft_strlen(str_block))
 		i++;
+	printf("i es: %i\n", i);
 	if (i < ft_strlen(str_block))
-		return (i);
+		return (i + 1);
 	return (0);
 }
 
@@ -75,7 +77,9 @@ char	*ft_get_line(char *str_block)
 	char	*str_line;
 
 	len = ft_detector(str_block);
-	str_line = malloc(sizeof(char) * (len + 1));
+	if (!str_block)
+		return (NULL);
+	str_line = (char *)malloc(sizeof(char) * (len));
 	if (!str_line)
 	{
 		free(str_block);
@@ -100,7 +104,7 @@ char	*ft_clean_this_up(char *str_block, char *str_line)
 
 	len_line = ft_strlen(str_line);
 	len_block = ft_strlen(str_block);
-	temp = malloc(sizeof(char) * (len_block - len_line));
+	temp = (char *)malloc(sizeof(char) * (len_block - len_line));
 	if (!temp)
 	{
 		free(str_line);
