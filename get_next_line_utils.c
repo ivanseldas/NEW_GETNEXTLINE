@@ -6,22 +6,13 @@
 /*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 15:24:09 by iseldas-          #+#    #+#             */
-/*   Updated: 2023/01/05 00:50:46 by ivanisp          ###   ########.fr       */
+/*   Updated: 2023/01/10 23:24:47 by ivanisp          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_joinfree(char *str_block, char *buffer)
-{
-	char	*temp;
-
-	temp = ft_strjoin(str_block, buffer);
-	free(str_block);
-	return (temp);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(const char *s1, const char *s2)
 {
 	char			*str;
 	unsigned int	i;
@@ -52,15 +43,14 @@ int	ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
-	while (*str != '\0')
+	while (str[i] != '\0')
 	{
-		str++;
 		i++;
 	}
 	return (i);
 }
 
-/*char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	size_t	s_len;
 	size_t	size;
@@ -80,7 +70,24 @@ int	ft_strlen(const char *str)
 	ft_memcpy(sub, s + start, len);
 	sub[len] = '\0';
 	return (sub);
-}*/
+}
+
+void	*ft_memcpy(void *dest, const void *src, size_t n)
+{
+	void	*d;
+	size_t	i;
+
+	i = 0;
+	if (!dest && !src)
+		return (NULL);
+	d = dest;
+	while (n > i)
+	{
+		((char *)dest)[i] = ((char *)src)[i];
+		i++;
+	}
+	return (d);
+}
 
 char	*ft_strdup(const char *s)
 {
@@ -100,15 +107,4 @@ char	*ft_strdup(const char *s)
 	}
 	str[i] = '\0';
 	return (str);
-}
-
-char	*ft_store_blocks(char *str_block, char *buffer)
-{
-	if (!buffer)
-		return (0);
-	if (!str_block)
-		str_block = ft_strdup("");
-	str_block = ft_joinfree(str_block, buffer);
-//	printf("STORED BLOCK: %s\n", str_block);
-	return (str_block);
 }
