@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ivanisp <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: iseldas- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/08 22:21:03 by ivanisp           #+#    #+#             */
-/*   Updated: 2023/01/11 11:18:28 by ivanisp          ###   ########.fr       */
+/*   Created: 2023/01/08 22:21:03 by iseldas-          #+#    #+#             */
+/*   Updated: 2023/01/17 18:44:16 by iseldas-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 char	*get_next_line(int fd)
 {
-	static char	*store[1025];
+	static char	*store[1024];
 	int			end;
 	char		*line;
 	char		*buffer;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1024)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > 1025)
 		return (NULL);
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
@@ -28,13 +28,13 @@ char	*get_next_line(int fd)
 	store[fd] = ft_get_blocks(fd, store[fd], buffer);
 	if (!store[fd])
 		return (NULL);
-	end = ft_counter(store[fd]);
-	line = ft_substr(store[fd], 0, end + 1);
-	if (line[0] == '\0')
+	end = ft_detector(store[fd]);
+	if (store[fd][0] == '\0')
 	{
-		free(line);
+		free(store[fd]);
 		return (NULL);
 	}
+	line = ft_substr(store[fd], 0, end + 1);
 	store[fd] = ft_substr_swap_store(store[fd], end);
 	return (line);
 }
@@ -44,56 +44,42 @@ char	*ft_get_blocks(int fd, char *store, char *buffer)
 	char	*temp;
 	int		i;
 
-	i = BUFFER_SIZE;
-	while (i > 0)
+	i = read(fd, buffer, BUFFER_SIZE);
+	while (1)
 	{
-		i = read(fd, buffer, BUFFER_SIZE);
 		if (i == -1)
 		{
 			free(buffer);
 			return (NULL);
 		}
+		if (i == 0)
+			break ;
 		buffer[i] = '\0';
 		if (!store)
 			store = ft_strdup("");
-		if (i == 0)
-			break ;
 		temp = store;
 		store = ft_strjoin(temp, buffer);
 		free(temp);
-		if (ft_detector(buffer, i) < i)
+		if (ft_detector(buffer) < i)
 			break ;
+		i = read(fd, buffer, BUFFER_SIZE);
 	}
 	free (buffer);
 	return (store);
 }
 
-int	ft_detector(char *buffer, int i)
+int	ft_detector(char *buffer)
 {
 	int	j;
 
 	j = 0;
-	while (j < i)
+	while (buffer[j] != '\0')
 	{
 		if (buffer[j] == '\n')
 			break ;
 		j++;
 	}
 	return (j);
-}
-
-int	ft_counter(char *store)
-{
-	int	i;
-
-	i = 0;
-	while (store[i] != '\0')
-	{
-		if (store[i] == '\n')
-			break ;
-		i++;
-	}
-	return (i);
 }
 
 char	*ft_substr_swap_store(char *store, int end)
